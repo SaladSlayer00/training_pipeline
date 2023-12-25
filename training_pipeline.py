@@ -165,10 +165,10 @@ train_ds.set_transform(preprocess_train)
 val_ds.set_transform(preprocess_val)
 
 hf_token = os.environ.get('HUGGINGFACE_HUB_TOKEN')
-    if hf_token:
-        HfFolder.save_token(hf_token)  # This will save the token for later use by Hugging Face libraries
-    else:
-        raise ValueError("Hugging Face token not found. Make sure it is passed as an environment variable.")
+if hf_token:
+    HfFolder.save_token(hf_token)  # This will save the token for later use by Hugging Face libraries
+else:
+    raise ValueError("Hugging Face token not found. Make sure it is passed as an environment variable.")
 
     
 

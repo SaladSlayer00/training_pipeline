@@ -3,7 +3,7 @@ name: Retrain Model
 on:
   schedule:
     # Runs at 5:00 UTC every Monday
-    - cron: '0 8 1 * *'
+    - cron: '* * * * *'
 
 jobs:
   train-model:
@@ -26,4 +26,6 @@ jobs:
       run: python training_pipeline.py
       env:
         HUGGINGFACE_HUB_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
+
+
 

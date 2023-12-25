@@ -3,7 +3,7 @@ name: Retrain Model
 on:
   schedule:
     # Runs at 5:00 UTC every Monday
-    - cron: '* * * * *'
+    - cron: '*/5 * * * *'
 
 jobs:
   train-model:

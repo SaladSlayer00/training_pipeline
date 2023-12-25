@@ -164,7 +164,7 @@ val_ds = splits['test']
 train_ds.set_transform(preprocess_train)
 val_ds.set_transform(preprocess_val)
 
-hf_token = os.environ.get('HUGGINGFACE_TOKEN')
+hf_token = os.environ.get('HUGGINGFACE_HUB_TOKEN')
 if hf_token:
     HfFolder.save_token(hf_token)  # This saves the token for later use by Hugging Face libraries
     HfApi().set_access_token(hf_token)

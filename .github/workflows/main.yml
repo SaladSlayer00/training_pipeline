@@ -8,6 +8,7 @@ on:
 jobs:
   train-model:
     runs-on: ubuntu-latest
+    timeout-minutes: 30 # Consider increasing timeout
 
     steps:
     - name: Checkout repository

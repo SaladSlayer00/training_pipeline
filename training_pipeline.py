@@ -222,10 +222,10 @@ metric_callback = KerasMetricCallback(
 )
 
 
-tensorboard_callback = TensorBoard(log_dir="./image_classification_resnet/logs")
+tensorboard_callback = TensorBoard(log_dir="./new_model/logs")
 
 model_name = model_checkpoint.split("/")[-1]
-push_to_hub_model_id = f"image_classification_resnet"
+push_to_hub_model_id = f"new_model"
 
 push_to_hub_callback = PushToHubCallback(
     output_dir="./new_model",

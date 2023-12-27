@@ -20,7 +20,7 @@ import os
 from huggingface_hub import HfApi, HfFolder
 
 
-dataset = load_dataset("SaladSlayer00/celebrity_lookalike")
+dataset = load_dataset("SaladSlayer00/twin_matcher")
 send_example_telemetry("image_classification_notebook", framework="tensorflow")
 model_checkpoint = "microsoft/resnet-50" # pre-trained model from which to fine-tune
 batch_size = 32 # batch size for training and evaluation
@@ -222,7 +222,7 @@ metric_callback = KerasMetricCallback(
 )
 
 
-tensorboard_callback = TensorBoard(log_dir="./new_model/logs")
+tensorboard_callback = TensorBoard(log_dir="./image_classification_resnet/logs")
 
 model_name = model_checkpoint.split("/")[-1]
 push_to_hub_model_id = f"image_classification_resnet"

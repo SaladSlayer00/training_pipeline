@@ -18,6 +18,7 @@ from transformers.keras_callbacks import PushToHubCallback
 from tensorflow.keras.callbacks import TensorBoard
 import os
 from huggingface_hub import HfApi, HfFolder
+from tensorflow.keras.callbacks import ModelCheckpoint
 
 
 dataset = load_dataset("SaladSlayer00/twin_matcher")
@@ -185,7 +186,6 @@ learning_rate = 5e-5
 weight_decay = 0.01
 epochs = 10
 
-
 optimizer = AdamWeightDecay(learning_rate=learning_rate, weight_decay_rate=weight_decay)
 
 model.compile(optimizer=optimizer)
@@ -230,10 +230,24 @@ push_to_hub_model_id = f"new_model"
 push_to_hub_callback = PushToHubCallback(
     output_dir="./new_model",
     hub_model_id=push_to_hub_model_id,
-    tokenizer=feature_extractor
+    tokenizer=feature_extractor,
+    save_checkpoints=True  # This will save and push checkpoints to the Hub
 )
 
 callbacks = [metric_callback, tensorboard_callback, push_to_hub_callback]
+
+checkpoint_callback = ModelCheckpoint(
+    filepath="./new_model/checkpoints/model-{epoch:04d}.ckpt",
+    save_weights_only=True,
+    verbose=1,
+    save_freq='epoch'
+)
+callbacks.append(checkpoint_callback)
+
+latest_checkpoint = tf.train.latest_checkpoint("./new_model/checkpoints/")
+if latest_checkpoint:
+    print(f"Loading from checkpoint: {latest_checkpoint}")
+    model.load_weights(latest_checkpoint)
 
 print(train_set)
 print(val_set)

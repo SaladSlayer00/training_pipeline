@@ -24,7 +24,7 @@ from tensorflow.keras.callbacks import ModelCheckpoint
 dataset = load_dataset("SaladSlayer00/twin_matcher")
 send_example_telemetry("image_classification_notebook", framework="tensorflow")
 model_checkpoint = "microsoft/resnet-50" # pre-trained model from which to fine-tune
-batch_size = 32 # batch size for training and evaluation
+batch_size = 16 # batch size for training and evaluation
 metric = load_metric("accuracy")
 example = dataset["train"][10]
 
@@ -75,7 +75,7 @@ def get_random_crop_size(img, scale=(0.08, 1.0), ratio=(3/4, 4/3)):
 
 def train_transforms(image, size=200):
     image = tf.keras.utils.img_to_array(image)
-    
+
     image = tf.image.resize(
         image,
         size=(size, size),
@@ -171,9 +171,6 @@ if hf_token:
 else:
     raise ValueError("Hugging Face token not found. Make sure it is passed as an environment variable.")
 
-    
-
-
 model = TFAutoModelForImageClassification.from_pretrained(
     model_checkpoint,
     label2id=label2id,
@@ -222,29 +219,28 @@ metric_callback = KerasMetricCallback(
 )
 
 
-tensorboard_callback = TensorBoard(log_dir="./new_model/logs")
+tensorboard_callback = TensorBoard(log_dir="./twin_matcher/logs")
 
 model_name = model_checkpoint.split("/")[-1]
-push_to_hub_model_id = f"new_model"
+push_to_hub_model_id = f"twin_matcher"
 
 push_to_hub_callback = PushToHubCallback(
-    output_dir="./new_model",
+    output_dir="./twin_matcher",
     hub_model_id=push_to_hub_model_id,
     tokenizer=feature_extractor,
-    save_checkpoints=True  # This will save and push checkpoints to the Hub
 )
 
 callbacks = [metric_callback, tensorboard_callback, push_to_hub_callback]
 
 checkpoint_callback = ModelCheckpoint(
-    filepath="./new_model/checkpoints/model-{epoch:04d}.ckpt",
+    filepath="./twin_matcher/checkpoints/model-{epoch:04d}.ckpt",
     save_weights_only=True,
     verbose=1,
     save_freq='epoch'
 )
 callbacks.append(checkpoint_callback)
 
-latest_checkpoint = tf.train.latest_checkpoint("./new_model/checkpoints/")
+latest_checkpoint = tf.train.latest_checkpoint("./twin_matcher/checkpoints/")
 if latest_checkpoint:
     print(f"Loading from checkpoint: {latest_checkpoint}")
     model.load_weights(latest_checkpoint)
@@ -256,11 +252,10 @@ model.fit(
     train_set,
     validation_data=val_set,
     callbacks=callbacks,
-    epochs=25,
-    batch_size=batch_size,
+    epochs=35,
+    batch_size=batch_size
 )
 
 
 eval_loss = model.evaluate(val_set)
-
 

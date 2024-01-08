@@ -252,7 +252,7 @@ model.fit(
     train_set,
     validation_data=val_set,
     callbacks=callbacks,
-    epochs=35,
+    epochs=10,
     batch_size=batch_size
 )
 
